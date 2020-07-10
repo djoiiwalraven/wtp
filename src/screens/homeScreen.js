@@ -58,9 +58,10 @@ export default class Home extends Component {
       eventCards: [],
       eventLikes: [],
       likesRecieved: false,
-      page: 'loadingData',
+      page: 'loading',
       searchInput: '',
       searching: false,
+      favFilter: false,
       user: {
         id: '',
         name: '',
@@ -93,11 +94,28 @@ export default class Home extends Component {
   }
 
   _onLikesReceived = (likesData) => {
+
+    this.setState({
+      eventLikes: likesData,
+    });
+    console.log(this.state.likesRecieved);
+    if(!this.state.likesRecieved){
+      console.log("hm?");
+      this.setState({page: 'events'});
+      this.setState({likesRecieved: true});
+    }
+    console.log('this._onLikesReceived(likesData): FINISHED');
+    this.setState(prevState => ({loading: false}));
+  }
+
+  _onLikesToggled = (likesData) => {
     this.setState(prevState => ({loading: false}));
     this.setState({
       eventLikes: likesData,
     });
+    console.log(this.state.likesRecieved);
     if(!this.state.likesRecieved){
+      console.log("hm?");
       this.setState({page: 'events'});
       this.setState({likesRecieved: true});
     }
@@ -149,19 +167,31 @@ export default class Home extends Component {
     })
   }
 
-  onToggleLikeEvent = (user_email,event_id) => {
-    API.toggleLike(user_email, event_id);
-    this.handleRefresh();
+  onToggleLikeEvent = async (user_email,event_id) => {
+    console.log(":");
+    this.setState(prevState => ({loading: true}));
+    await API.toggleLike(user_email, event_id,this._onLikesToggled);
+    //await console.log("toggleLike?");
+    //this.handleRefresh();
   }
 
   handleRefresh = async () => {
     this.setState(prevState => ({loading: true}));
     //console.log(this.state.loading);
     console.log('refreshing');
-    await API.getEvents(this._onEventsReceived);
     await API.getLikes(this._onLikesReceived, this.state.user.email);
+    await API.getEvents(this._onEventsReceived);
     //console.log(this.state.loading);
     console.log('this.handleRefresh: FINISHED')
+  }
+
+  filterFavourites = () => {
+    console.log('favFilter');
+    this.setState({favFilter: true});
+  }
+
+  unFilterFavourites = () => {
+    this.setState({favFilter: false});
   }
 
   render() {
@@ -175,11 +205,14 @@ export default class Home extends Component {
             <View style={styles.titleDevider}>
               <Text style={styles.title}>Where'sTheParty</Text>
             </View>
+            <IconButton
+              click={this.toggleSearching}
+              source={PinIMG}
+              styling={{backgroundColor: '#f4f4f4',borderColor: '#333', borderWidth: 0, height: '70%', borderRadius: 20}}
+            />
             <View style={styles.pageDevider}>
               <Text style={styles.page}>{this.state.page}</Text>
             </View>
-
-
 
             <HOCSearchBar
               isMounted={this.state.searching}
@@ -205,14 +238,15 @@ export default class Home extends Component {
               find={this.state.searchInput}
               refreshing={this.state.loading}
               onRefresh={this.handleRefresh}
+              favFilter={this.state.favFilter}
             />
           </View>
-
 
           <View  style={styles.footer}>
             <IconButton
               click={() => {
                 console.log('refresh');
+                this.unFilterFavourites();
                 this.setState({page: 'events'});
                 API.getEvents(this._onEventsReceived);
               }}
@@ -227,17 +261,15 @@ export default class Home extends Component {
               source={TagIMG}
             />
             <IconButton
-              click={() => this.setState({page:'favorites'})}
+              click={this.filterFavourites}
               source={HeartIMG}
             />
             <IconButton
               click={() => this.setState({page:this.state.user.firstName})}
               source={UserIMG}
             />
-
-
-
           </View>
+
           <SafeAreaBOT/>
         </View>
       </SafeAreaProvider>
@@ -273,7 +305,7 @@ const styles = StyleSheet.create({
   },
   titleDevider: {
     height: '100%',
-    flex: 3,
+    flex: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
