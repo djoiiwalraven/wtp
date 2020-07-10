@@ -35,25 +35,42 @@ export default function EventsScreen(props) {
 
   return(
     <View style={{height: '100%'}}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={data}
-        renderItem={({item, index}) => {
-          console.log(props.favFilter);
-          if(item.event.location == props.find || item.event.tags.includes(props.find) || props.find == '' ){
-            if(props.favFilter){
-              try {
-                console.log(likes.length);
-                if(likes.length == 0){
-                  console.log(likes.amount);
-                  return(
-                    <View><Text>You have no favorites yet!</Text></View>
-                  )
-                }else if(item.event.liked){
+      {
+        likes.length == 0 && props.favFilter ? (
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>You have no favorites yet!</Text>
+          </View>
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data}
+            renderItem={({item, index}) => {
+              if(item.event.location == props.find || item.event.tags.includes(props.find) || props.find == '' ){
+                if(props.favFilter){
+                  try {
+                    if(item.event.liked){
+                      return(
+                        <EventCard
+                          key={(item, index) => {
+                            return item.id;
+                          }}
+                          title={item.event.titel}
+                          eventId={item.event.id}
+                          location={item.event.location}
+                          {...props}
+                          liked={item.event.liked}
+                          toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
+                        />
+                      );
+                    }
+                  } catch (e){
+                    console.log(e);
+                  }
+                }else{
                   return(
                     <EventCard
                       key={(item, index) => {
-                          return item.id;
+                        return item.id;
                       }}
                       title={item.event.titel}
                       eventId={item.event.id}
@@ -62,33 +79,18 @@ export default function EventsScreen(props) {
                       liked={item.event.liked}
                       toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
                     />
-                  );
+                  )
                 }
-              } catch (e){
-                console.log(e);
               }
-            }else{
-              return(
-                <EventCard
-                  key={(item, index) => {
-                      return item.id;
-                  }}
-                  title={item.event.titel}
-                  eventId={item.event.id}
-                  location={item.event.location}
-                  {...props}
-                  liked={item.event.liked}
-                  toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
-                />
-              )
-            }
-          }
-        }}
-        ListFooterComponent={renderFooter()}
-        keyExtractor={(item, index) => String(index)}
-        refreshing={props.refreshing}
-        onRefresh={props.onRefresh}
-      />
+            }}
+            ListFooterComponent={renderFooter()}
+            keyExtractor={(item, index) => String(index)}
+            refreshing={props.refreshing}
+            onRefresh={props.onRefresh}
+          />
+        )
+      }
+
     </View>
   )
 }
