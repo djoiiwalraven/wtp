@@ -30,7 +30,7 @@ export default function IconButton(props) {
   }
 
   return(
-    <TouchableOpacity style={[styles.button,props.style]} onPress={props.click}>
+    <TouchableOpacity style={[styles.button,props.styling]} onPress={props.click}>
       <Image style={{height: 30, width: 30}} source={props.source}/>
     </TouchableOpacity>
   )
