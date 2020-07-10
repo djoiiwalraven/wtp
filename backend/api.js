@@ -7,19 +7,18 @@ const GAPV = new firebase.auth.GoogleAuthProvider();
 //const ID_TOKEN = googleUser.getAuthResponse().id_token;
 import * as Google from 'expo-google-app-auth';
 
-
 const API = {
   addEvent: function(event){
     EC.add({
       event,
     });
   },
-  toggleLike: async function(userEmail,eventId){
+  toggleLike: async function(userEmail,eventId, toggled){
     let initQuery = await LIKES
     .where('user_email', '==', userEmail)
     .where('event_id','==', eventId);
 
-    initQuery
+    await initQuery
     .get()
     .then(snap => {
       if(snap.size > 0) {
@@ -36,10 +35,12 @@ const API = {
           user_email: userEmail,
           event_id: eventId,
         });
-        //visualfeedback
-
       }
     });
+    let likeQuery = await LIKES.where('user_email', '==', userEmail);
+    let docSnapShots = await likeQuery.get();
+    let docData = docSnapShots.docs.map(doc => doc.data());
+    await toggled(docData);
   },
   getLikes: async function(likesRetrieved, userEmail){
     let initQuery = await LIKES.where('user_email', '==', userEmail);

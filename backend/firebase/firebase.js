@@ -24,7 +24,7 @@ const config = {
 }
 
 firebase.initializeApp(config);
-firebase.firestore.setLogLevel('debug');
+//firebase.firestore.setLogLevel('debug');
 
 export const storage = firebase.storage();
 export const firestore = firebase.firestore();
