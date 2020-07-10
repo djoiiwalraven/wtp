@@ -11,6 +11,8 @@ import {
   Button
 } from 'react-native';
 
+import IoButton from '../objects/dumb/buttons/ioButton';
+
 //SafeAreaFunctions
 function SafeAreaTOP() {
   const safeArea = useSafeArea();
