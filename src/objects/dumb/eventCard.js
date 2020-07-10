@@ -35,7 +35,7 @@ export default function EventCard(props) {
           source={require('../../../assets/images/icons/tag.png')}
         />
         <View style={{flex: 2, justifyContent: 'center'}}>
-          <Text>free entry</Text>
+          <Text>{props.price}</Text>
         </View>
         <IconButton
           style={{flex: 1}}
