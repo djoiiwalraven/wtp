@@ -195,7 +195,6 @@ export default class Home extends Component {
   }
 
   render() {
-
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
