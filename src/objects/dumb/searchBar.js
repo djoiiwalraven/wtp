@@ -22,6 +22,7 @@ export default function SearchBar(props) {
         <TextInput
           value={props.searchValue}
           placeholder='search events'
+          autoCapitalize = 'none'
           style={styles.textInput}
           onChangeText={value => props.updateSearch(value)}
         />
