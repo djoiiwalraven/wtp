@@ -42,9 +42,14 @@ export default function EventsScreen(props) {
           console.log(props.favFilter);
           if(item.event.location == props.find || item.event.tags.includes(props.find) || props.find == '' ){
             if(props.favFilter){
-
               try {
-                if(item.event.liked){
+                console.log(likes.length);
+                if(likes.length == 0){
+                  console.log(likes.amount);
+                  return(
+                    <View><Text>You have no favorites yet!</Text></View>
+                  )
+                }else if(item.event.liked){
                   return(
                     <EventCard
                       key={(item, index) => {
@@ -58,10 +63,6 @@ export default function EventsScreen(props) {
                       toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
                     />
                   );
-                }else if(likes.amount <= 0){
-                  return(
-                    <View><Text>You have no favorites yet!</Text></View>
-                  )
                 }
               } catch (e){
                 console.log(e);
