@@ -11,13 +11,27 @@ import EventCard from '../../objects/dumb/eventCard';
 
 export default function EventsScreen(props) {
 
-
   let renderFooter = () => {
     return <View style={styles.footer}></View>
   }
 
   let data = props.data;
   let likes = props.likes;
+  console.log("START RENDER{EventsScreen}");
+  for(let j = 0; j < data.length; j++){
+    data[j].event.liked = false;
+
+    let tags = data[j].event.titel + " " + data[j].event.titel.toLowerCase() + " " + data[j].event.titel.toUpperCase();
+    tags = tags.split(" ");
+    data[j].event.tags = tags;
+
+    for(let i = 0; i < likes.length; i++){
+      if(data[j].event.id == likes[i].event_id){
+        data[j].event.liked = true;
+      }
+    }
+  }
+  console.log(data);
 
   return(
     <View style={{height: '100%'}}>
@@ -25,29 +39,48 @@ export default function EventsScreen(props) {
         showsVerticalScrollIndicator={false}
         data={data}
         renderItem={({item, index}) => {
-          let itemLiked = false;
-          console.log("START RENDER ITEM{EventsScreen}");
-          if(item.event.location == props.find || item.event.titel == props.find || props.find == '' ){
-            for(let i = 0; i < likes.length;i++){
-              if(item.event.id === likes[i].event_id){
-                itemLiked = true;
-              }else{
-                itemLiked = false;
+          console.log(props.favFilter);
+          if(item.event.location == props.find || item.event.tags.includes(props.find) || props.find == '' ){
+            if(props.favFilter){
+
+              try {
+                if(item.event.liked){
+                  return(
+                    <EventCard
+                      key={(item, index) => {
+                          return item.id;
+                      }}
+                      title={item.event.titel}
+                      eventId={item.event.id}
+                      location={item.event.location}
+                      {...props}
+                      liked={item.event.liked}
+                      toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
+                    />
+                  );
+                }else if(likes.amount <= 0){
+                  return(
+                    <View><Text>You have no favorites yet!</Text></View>
+                  )
+                }
+              } catch (e){
+                console.log(e);
               }
+            }else{
+              return(
+                <EventCard
+                  key={(item, index) => {
+                      return item.id;
+                  }}
+                  title={item.event.titel}
+                  eventId={item.event.id}
+                  location={item.event.location}
+                  {...props}
+                  liked={item.event.liked}
+                  toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
+                />
+              )
             }
-            return(
-              <EventCard
-                key={(item, index) => {
-                    return item.id;
-                }}
-                title={item.event.titel}
-                eventId={item.event.id}
-                location={item.event.location}
-                {...props}
-                liked={itemLiked}
-                toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
-              />
-            )
           }
         }}
         ListFooterComponent={renderFooter()}
