@@ -21,7 +21,12 @@ export default function EventsScreen(props) {
   for(let j = 0; j < data.length; j++){
     data[j].event.liked = false;
 
-    let tags = data[j].event.titel + " " + data[j].event.titel.toLowerCase() + " " + data[j].event.titel.toUpperCase();
+    let tags = data[j].event.titel +
+    " " + data[j].event.titel.toLowerCase() +
+    " " + data[j].event.titel.toUpperCase() +
+    " " + data[j].event.location +
+    " " +  data[j].event.location.toLowerCase() +
+    " " +  data[j].event.location.toUpperCase();
     tags = tags.split(" ");
     data[j].event.tags = tags;
 
@@ -45,41 +50,43 @@ export default function EventsScreen(props) {
             showsVerticalScrollIndicator={false}
             data={data}
             renderItem={({item, index}) => {
-              if(item.event.location == props.find || item.event.tags.includes(props.find) || props.find == '' ){
-                if(props.favFilter){
-                  try {
-                    if(item.event.liked){
-                      return(
-                        <EventCard
-                          key={(item, index) => {
-                            return item.id;
-                          }}
-                          title={item.event.titel}
-                          eventId={item.event.id}
-                          location={item.event.location}
-                          {...props}
-                          liked={item.event.liked}
-                          toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
-                        />
-                      );
+              if(item.event.location == props.locFilter || props.locFilter === 'Heel Nederland'){
+                if(item.event.tags.includes(props.find) || props.find == '' ){
+                  if(props.favFilter){
+                    try {
+                      if(item.event.liked){
+                        return(
+                          <EventCard
+                            key={(item, index) => {
+                              return item.id;
+                            }}
+                            title={item.event.titel}
+                            eventId={item.event.id}
+                            location={item.event.location}
+                            {...props}
+                            liked={item.event.liked}
+                            toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
+                          />
+                        );
+                      }
+                    } catch (e){
+                      console.log(e);
                     }
-                  } catch (e){
-                    console.log(e);
+                  }else{
+                    return(
+                      <EventCard
+                        key={(item, index) => {
+                          return item.id;
+                        }}
+                        title={item.event.titel}
+                        eventId={item.event.id}
+                        location={item.event.location}
+                        {...props}
+                        liked={item.event.liked}
+                        toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
+                      />
+                    )
                   }
-                }else{
-                  return(
-                    <EventCard
-                      key={(item, index) => {
-                        return item.id;
-                      }}
-                      title={item.event.titel}
-                      eventId={item.event.id}
-                      location={item.event.location}
-                      {...props}
-                      liked={item.event.liked}
-                      toggleLikeEvent={() => props.onToggleLikeEvent(props.userEmail, item.event.id)}
-                    />
-                  )
                 }
               }
             }}

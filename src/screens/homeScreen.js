@@ -21,6 +21,7 @@ import IconButton from '../../src/objects/dumb/buttons/iconButton';
 import ScreensHOC from '../../src/HOC/pagesHOC';
 
 import SearchBar from '../objects/dumb/searchBar';
+import Location from '../objects/dumb/location';
 
 //SVG icons
 import CancelIMG from '../../assets/images/icons/cancel.png';
@@ -62,6 +63,8 @@ export default class Home extends Component {
       searchInput: '',
       searching: false,
       favFilter: false,
+      location: false,
+      locFilter: 'Heel Nederland',
       user: {
         id: '',
         name: '',
@@ -69,7 +72,7 @@ export default class Home extends Component {
         lastName: '',
         email: '',
         ava: '',
-      }
+      },
     }
   };
 
@@ -188,10 +191,20 @@ export default class Home extends Component {
   filterFavourites = () => {
     console.log('favFilter');
     this.setState({favFilter: true});
+    this.setState({page: 'likes'});
   }
 
   unFilterFavourites = () => {
     this.setState({favFilter: false});
+    //this.setState({page: 'likes'});
+  }
+
+  toggleLocation = () => {
+    this.setState(prevState => ({location: !this.state.location}))
+  }
+
+  setLocation = (city) => {
+    this.setState({locFilter: city});
   }
 
   render() {
@@ -205,7 +218,7 @@ export default class Home extends Component {
               <Text style={styles.title}>Where'sTheParty</Text>
             </View>
             <IconButton
-              click={this.toggleSearching}
+              click={this.toggleLocation}
               source={PinIMG}
               styling={{backgroundColor: '#f4f4f4',borderColor: '#333', borderWidth: 0, height: '70%', borderRadius: 20}}
             />
@@ -225,6 +238,13 @@ export default class Home extends Component {
           </View>
 
           <View style={styles.PageContainer}>
+            {
+              this.state.location ? (
+                <Location
+                  setLoc={(city) => this.setLocation(city)}
+                />
+              ) : ( null )
+            }
             <ScreensHOC
               firstName={this.state.user.firstName}
               userEmail={this.state.user.email}
@@ -238,6 +258,7 @@ export default class Home extends Component {
               refreshing={this.state.loading}
               onRefresh={this.handleRefresh}
               favFilter={this.state.favFilter}
+              locFilter={this.state.locFilter}
             />
           </View>
 
@@ -269,6 +290,8 @@ export default class Home extends Component {
             />
           </View>
 
+
+
           <SafeAreaBOT/>
         </View>
       </SafeAreaProvider>
@@ -288,7 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    position: 'relative'
+    position: 'relative',
   },
   footer: {
     flex: 1,

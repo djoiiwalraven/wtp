@@ -15,7 +15,7 @@ export default function PagesHOC(props){
         {...props}
       />
     )
-  }else if(page == 'events'){
+  }else if(page == 'events' || page == 'likes'){
     return(
       <EventsScreen
         {...props}
@@ -24,12 +24,6 @@ export default function PagesHOC(props){
   }else if(page == 'tickets'){
     return(
       <TicketsScreen
-        {...props}
-      />
-    )
-  }else if(page == 'favorites'){
-    return(
-      <SavedScreen
         {...props}
       />
     )
