@@ -1,7 +1,23 @@
 {
   "expo": {
     "name": "WaarIsDatFeestje",
+    "icon": "./assets/beer.png",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "splash": {
+      "image": "./assets/party.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
     "slug": "WaarIsDatFeestje",
+    "ios": {
+      "bundleIdentifier": "com.pengguwin.waarisdatfeestje",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.pengguwin.waarisdatfeestje",
+      "versionCode": 1
+    },
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -9,14 +25,6 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -25,9 +33,6 @@
       "assets/fonts/*",
       "assets/svg/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": ["js", "jsx", "ts", "tsx", "svg"]
