@@ -89,9 +89,12 @@ const API = {
   },
   signInWithGoogleAsync: async function() {
     try {
+      console.log("GOOGLE SIGN IN");
       const result = await Google.logInAsync({
-        behavior: 'web',
-        androidClientId: '570753297023-bhpq9bfsc2l4dv3gt22cjaf0tp9jmn47.apps.googleusercontent.com',
+        //behavior: 'web',
+        //androidClientId: '570753297023-bhpq9bfsc2l4dv3gt22cjaf0tp9jmn47.apps.googleusercontent.com',
+        androidClientId: '570753297023-2c3jua3ut0sts87h0u8p3f5kjc40sj03.apps.googleusercontent.com',
+        androidStandaloneAppClientId: '570753297023-2c3jua3ut0sts87h0u8p3f5kjc40sj03.apps.googleusercontent.com',
         iosClientId: '570753297023-n24t00f95f3u4dejircd6pcgsp94vabh.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
@@ -133,7 +136,7 @@ const API = {
         );
         // Sign in with credential from the Google user.
         firebase.auth()
-        .signInAndRetrieveDataWithCredential(credential)
+        .signInWithCredential(credential)
         .then(result => {
           console.log('user signed in');
           if(result.additionalUserInfo.isNewUser){
